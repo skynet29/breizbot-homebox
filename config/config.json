@@ -1,0 +1,30 @@
+{
+	"masterPort": 8090,
+	"masterHost": "com.breizbot.ovh",
+	"masterUser": "admin",
+
+	"launcher": {
+		"logPath": "./logs",
+
+		"agents": {
+			"shapeAgent": {"script": "agents/shapeAgent.js", "start": "manual"},			
+			"drone": {"script": "agents/drone.js", "start": "manual"},
+			"radar": {"script": "agents/radar.js", "start": "manual"},
+			"sumProvider": {"script": "agents/test/service/provider.js", "start": "manual"},
+			"parrot": {"script": "agents/parrot.js", "start": "manual"}
+		}
+	},
+
+	"drone": {
+		"storeInFile": false,
+		"storeFileName": "bus2.json",
+		"warpFactor": 10,
+		"gyrSpeed": 8,
+		"captureRadius": 10,
+		"icon": {
+		 	"type": "ais"
+		}		
+	}
+
+
+}

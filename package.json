@@ -1,0 +1,19 @@
+{
+  "name": "brainbot",
+  "version": "1.0.0",
+  "description": "A nodejs based javascript framework to pilot robot.",
+  "main": "launcher.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marc DELOMEZ",
+  "license": "ISC",
+  "dependencies": {
+    "eventemitter2": "^5.0.1",
+    "forever-monitor": "^1.7.1",
+    "greenlock": "^2.3.8",
+    "nodejs-websocket": "^1.7.1",
+    "redirect-https": "^1.1.5",
+    "ws": "^6.0.0"
+  }
+}
