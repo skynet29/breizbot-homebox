@@ -8,7 +8,7 @@ var globalConfig = require('./config/config.json')
 const name = `launcher.${hostName}`
 const userName = globalConfig.masterUser
 
-
+require('console-title')('Agents Launcher')
 
 
 const options = {

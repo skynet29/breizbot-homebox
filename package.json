@@ -9,11 +9,11 @@
   "author": "Marc DELOMEZ",
   "license": "ISC",
   "dependencies": {
+    "console-title": "^1.1.0",
     "eventemitter2": "^5.0.1",
     "forever-monitor": "^1.7.1",
-    "greenlock": "^2.3.8",
+    "johnny-five": "^0.15.0",
     "nodejs-websocket": "^1.7.1",
-    "redirect-https": "^1.1.5",
     "ws": "^6.0.0"
   }
 }
