@@ -6,6 +6,8 @@ const hostName = require('os').hostname()
 
 var globalConfig = require('./config/config.json')
 const name = `launcher.${hostName}`
+const userName = globalConfig.masterUser
+
 
 
 
@@ -178,7 +180,7 @@ function stopAgent(data) {
 	}
 	else {
 		agentsState[agentName].state = "stoping"
-		client.sendTo(agentName, 'shutdown')
+		client.sendTo(`box.${userName}.${agentName}`, 'shutdown')
 	}
 	
 }
