@@ -1,7 +1,8 @@
 {
 	"masterPort": 8090,
 	"masterHost": "com.breizbot.ovh",
-	"masterUser": "admin",
+	"masterUser": "userName",
+	"masterPwd": "password",
 
 	"launcher": {
 		"logPath": "./logs",

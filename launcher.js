@@ -1,35 +1,29 @@
+process.argv[2] = 'launcher'
+
 var forever = require('forever-monitor')
 var fs = require('fs')
 var path = require('path')
-const Client = require('./lib/client')
+const agent = require('./lib/agent')
 const hostName = require('os').hostname()
 
-var globalConfig = require('./config/config.json')
 const name = `launcher.${hostName}`
-const userName = globalConfig.masterUser
 
 require('console-title')('Agents Launcher')
 
 
-const options = {
-	port: globalConfig.masterPort,
-	host: globalConfig.masterHost,
-	userName:  globalConfig.masterUser,
-	agentName: name
-}
 
-var client  = new Client(options)
+// var client  = new Client(options)
 
 
 var sigInt = false
 
 
-if (!('launcher' in globalConfig)) {
-	console.error('no laucnher config !')
-	process.exit(2)
-}
+// if (!('launcher' in globalConfig)) {
+// 	console.error('no laucnher config !')
+// 	process.exit(2)
+// }
 
-var config = globalConfig.launcher
+var config = agent.config
 
 var logPath = config.logPath || "./log/"
 if (!fs.existsSync(logPath)) {
@@ -180,7 +174,7 @@ function stopAgent(data) {
 	}
 	else {
 		agentsState[agentName].state = "stoping"
-		client.sendTo(`box.${userName}.${agentName}`, 'shutdown')
+		agent.sendTo(`box.${agentName}`, 'shutdown')
 	}
 	
 }
@@ -202,26 +196,26 @@ startConfiguredAgents()
 
 
 
-client.register('launcherStartAgent', false, function(msg) {
+agent.register('launcherStartAgent', false, function(msg) {
 	console.log(`startAgent '${ msg.data}'`)
 	startAgent(msg.data)
 })
 
-client.register('launcherStopAgent', false, function(msg) {
+agent.register('launcherStopAgent', false, function(msg) {
 	console.log(`stopAgent`, msg.data)
 	stopAgent(msg.data)
 })
 
-client.events.on('connect', function() {
+agent.onConnect(function() {
 	sendStatus()
 })
 
 
-client.connect()
+agent.start()
 
 
 function sendStatus() {
-	client.emit(`launcherStatus.${hostName}`, agentsState)
+	agent.emit(`launcherStatus.${hostName}`, agentsState)
 }
 
 /*process.on('SIGINT', function() {
