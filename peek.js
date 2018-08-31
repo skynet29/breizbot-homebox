@@ -11,26 +11,19 @@ if (params.topic == undefined) {
 	console.log('Usage: node peek topic=topicName [hist=true]')
 	process.exit(0)
 }
-const Client = require('./lib/client')
-const globalConfig = require('./config/config.json')
 
-var agentName = 'peek' + Date.now() % 100000
+var agentName = 'peek.' + Date.now() % 100000
 
-const options = {
-	port: globalConfig.masterPort,
-	host: globalConfig.masterHost,
-	userName:  globalConfig.masterUser,
-	agentName
-}
+process.argv[2] = agentName
 
-var client  = new Client(options)
+const agent = require('./lib/agent')
 
 
 var hist = (params.hist === 'true')
 
-client.register(params.topic, hist, function(msg) {
+agent.register(params.topic, hist, function(msg) {
 	console.log('msg', JSON.stringify(msg, null, 4))
 })
 
 
-client.connect()
+agent.start()

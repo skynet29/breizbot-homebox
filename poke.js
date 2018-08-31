@@ -21,24 +21,20 @@ if (params.file != undefined) {
 //console.log('data', params.data)
 
 
-const Client = require('./lib/client')
-const globalConfig = require('./config/config.json')
-
-var agentName = 'poke' + Date.now() % 100000
-
-const options = {
-	port: globalConfig.masterPort,
-	host: globalConfig.masterHost,
-	userName:  globalConfig.masterUser,
-	agentName
-}
-
-var client  = new Client(options)
+var agentName = 'poke.' + Date.now() % 100000
 
 
-client.connect()
+process.argv[2] = agentName
 
-client.events.on('connect',function() {
-	client.emit(params.topic, params.data)
-	process.exit(0)
+const agent = require('./lib/agent')
+
+
+var hist = (params.hist === 'true')
+
+agent.onConnect(() => {
+	console.log('send', params.data)
+	agent.emit(params.topic, params.data)
+	process.exit(0)	
 })
+
+agent.start()
