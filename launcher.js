@@ -218,7 +218,9 @@ function sendStatus() {
 	agent.emit(`launcherStatus.${hostName}`, agentsState)
 }
 
-/*process.on('SIGINT', function() {
-	stopAllRunningAgents()
-	sigInt = true
-})*/
+process.on('SIGINT', function() {
+	//stopAllRunningAgents()
+	//sigInt = true
+	agent.emit(`launcherStatus.${hostName}`)
+	process.exit(0)
+})

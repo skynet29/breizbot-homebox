@@ -1,3 +1,36 @@
+
+const types = {
+	'IOT.SMARTPLUGSWITCH': {
+		actions: {
+			'on': {
+				label: 'On',
+				method: function(device) {
+					device.setPowerState(true)
+				}
+			},
+
+			'off': {
+				label: 'Off',
+				method: function(device) {
+					device.setPowerState(false)
+				}
+			}
+
+		},
+		events: {
+			'power-on': function(device) {
+				console.log('power-on')
+				device.state = 1
+			},
+
+			'power-off': function(device) {
+				console.log('power-off')
+				device.state = 0
+			}
+		}
+	}
+}
+
 const agent  = require('../lib/agent')
 
 agent.register('tplink.action.*', false, function(msg) {
@@ -5,21 +38,14 @@ agent.register('tplink.action.*', false, function(msg) {
 	const deviceId = msg.topic.split('.')[2]
 	console.log('deviceId', deviceId)
 
-	const device = devices[deviceId].adapter
-	//console.log('device', device)
+	const device = devices[deviceId]
 
+	const cmd = msg.data && msg.data.action
 
-	const action = msg.data && msg.data.action
+	const action = device.actions[cmd]
 
-	switch (action)	{
-		case 'on':
-			device.setPowerState(true)
-		break
-		case 'off':
-			device.setPowerState(false)
-		break
-	}
-	//console.log('ret', ret)
+	action.method(device.adapter)
+
 })
 
 
@@ -37,25 +63,31 @@ client.startDiscovery()
   device.getSysInfo().then((info) => {
 
   	console.log('info', info)
+
+  	const type = info.type
+
+  	const actions = types[type].actions
+
+
   	 devices[info.deviceId] = {
   	 	type: info.dev_name,
   	 	state: info.relay_state,
   	 	alias: info.alias,
-  	 	adapter: device	  	 	
+  	 	adapter: device,
+  	 	actions	  	 	
   	 }
 
-	if (info.type === 'IOT.SMARTPLUGSWITCH') {
-		device.on('power-on', () => {
-			console.log('power-on')
-			devices[info.deviceId].state = 1
-			sendStatus()
-		})
-		device.on('power-off', () => {
-			console.log('power-off')
-			devices[info.deviceId].state = 0
-			sendStatus()
-		})
-	}
+
+  	 const events = types[type].events || {}
+
+  	 for(let ev in events) {
+
+  	 	device.on(ev, () => {
+  	 		events[ev](devices[info.deviceId])
+  	 		sendStatus()
+  	 	})
+  	 }
+
 
 	sendStatus()
 
@@ -71,12 +103,18 @@ function sendStatus() {
 
 		const device = devices[deviceId]
 		const {alias, type, state} = device
+		const actions = []
+		for(let a in device.actions) {
+			const action = device.actions[a]
+			actions.push({cmd: a, label: action.label})
+		}
 
-		data.push({alias, type, state, deviceId})
+
+		data.push({alias, type, state, deviceId, actions})
 
 	}
 
-	console.log('sendStatus', data)
+	//console.log('sendStatus', data)
 
 	agent.emit('tplink.status', data)		
 
