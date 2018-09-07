@@ -14,7 +14,7 @@
 			"sumProvider": {"script": "agents/test/service/provider.js", "start": "manual"},
 			"parrot": {"script": "agents/parrot.js", "start": "manual"},
 			"tplink": {"script": "agents/tplink.js", "start": "manual"},
-			"arduino": {"script": "agents/arduino.js", "start": "manual"}
+			"arduino": {"script": "agents/arduino/index.js", "start": "manual"}
 		}
 	},
 
@@ -27,6 +27,18 @@
 		"icon": {
 		 	"type": "ais"
 		}		
+	},
+
+	"arduino": {
+		"devices": {
+			"led1": {
+				"type": "led",
+				"alias": "Led 1",
+				"options": {
+					"pin": 13
+				}
+			}
+		}
 	}
 
 
