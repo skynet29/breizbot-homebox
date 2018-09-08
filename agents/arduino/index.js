@@ -45,11 +45,19 @@ function initDevices() {
 
 		const adapter = typeDesc.create(options)
 
-		devices[deviceId] = {
+		const device = devices[deviceId] = {
 			adapter, 
 			properties,
 			alias,
 			type
+		}
+
+		const events = typeDesc.events || {}
+		for(let ev in events) {
+			adapter.on(ev, function() {
+				events[ev](device)
+				sendStatus()
+			})
 		}
 
 

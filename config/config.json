@@ -48,6 +48,13 @@
 				"options": {
 					"pin": 13
 				}
+			},
+			"button1": {
+				"type": "pushButton",
+				"alias": "Push button",
+				"options": {
+					"pin": 2
+				}
 			}
 		}
 	}

@@ -72,7 +72,17 @@ rgbLed.create = function(options) {
 }
 rgbLed.properties.color = {
 	label: 'Color',
-	value: '0xffffff'
+	value: 'White'
+}
+
+const colorMap = {
+	'RGB(255,255,255)': 'White',
+	'RGB(255,0,0)': 'Red',
+	'RGB(0,255,0)': 'Green',
+	'RGB(0,0,255)': 'Blue',
+	'RGB(255,255,0)': 'Yellow',
+	'RGB(0,255,255)': 'Cyan',
+	'RGB(255,0,255)': 'Magenta',
 }
 
 rgbLed.actions.color = {
@@ -80,8 +90,9 @@ rgbLed.actions.color = {
 	method: function(device, args) {
 		console.log('brightness', args)
 		const {red, green, blue} = args
-		const value = red << 16 | green << 8 | blue
-		device.properties.color = '0x' + value.toString(16)
+		let color = `RGB(${red},${green},${blue})`
+		color = colorMap[color] || color
+		device.properties.color = color
 		device.adapter.color(args)
 	},
 	args: {
@@ -119,7 +130,36 @@ rgbLed.actions.color = {
 }
 
 
+
+const pushButton = {
+	create: function(options) {
+		console.log('create button', options)
+		return new five.Button(options)
+	},
+
+	properties: {
+		state: {
+			label: 'State',
+			value: 'release'
+		}
+
+	},
+
+	events: {
+		press: function(device) {
+			console.log('event press')
+			device.properties.state = 'press'
+		},
+		release: function(device) {
+			console.log('event release')
+			device.properties.state = 'release'
+		}
+	}
+}
+
+
 module.exports = {
-	'led': led,
-	'rgbLed': rgbLed
+	led,
+	rgbLed,
+	pushButton
 }
