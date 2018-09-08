@@ -25,6 +25,7 @@ function initDevices() {
 		console.log('deviceId', deviceId)
 
 		const deviceDesc = devicesDesc[deviceId]
+		//console.log('deviceDesc', deviceDesc)
 		const {type, options, alias} = deviceDesc
 
 		const typeDesc = typesDesc[type]
@@ -32,6 +33,8 @@ function initDevices() {
 			console.log('unknown device type', type)
 			process.exit(0)
 		}
+
+		//console.log('typeDesc', typeDesc)
 
 		const properties = {}
 		for(let propName in typeDesc.properties) {
