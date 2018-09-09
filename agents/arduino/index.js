@@ -86,6 +86,10 @@ agent.register('arduino.action.*', false, function(msg) {
 	console.log('deviceId', deviceId)
 
 	const device = devices[deviceId]
+	if (device == undefined) {
+		console.log('unknown device', deviceId)
+		return
+	}
 
 	const cmd = msg.data && msg.data.action
 
@@ -99,5 +103,23 @@ agent.register('arduino.action.*', false, function(msg) {
 
 
 })
+
+agent.registerService('arduino.findDeviceId', function(req, resp) {
+	console.log('req', req)
+	if (typeof req.alias != 'string') {
+		resp.statusCode = 200
+	}
+
+	for(var deviceId in devicesDesc) {
+		var deviceDesc = devicesDesc[deviceId]
+		if( deviceDesc.alias.toLowerCase() === req.alias.toLowerCase()) {
+			resp.data = {deviceId}
+			return
+		}
+	}
+	resp.statusCode = 201
+
+})
+
 
 agent.start()
