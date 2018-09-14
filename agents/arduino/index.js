@@ -81,7 +81,7 @@ agent.onConnect(function() {
 })
 
 agent.register('arduino.action.*', false, function(msg) {
-	//console.log('Receive msg', msg)
+	console.log('Receive msg', msg.data)
 	const deviceId = msg.topic.split('.')[2]
 	console.log('deviceId', deviceId)
 
@@ -105,7 +105,7 @@ agent.register('arduino.action.*', false, function(msg) {
 })
 
 agent.registerService('arduino.findDeviceId', function(req, resp) {
-	console.log('req', req)
+	console.log('findDeviceId', req)
 	if (typeof req.alias != 'string') {
 		resp.statusCode = 200
 	}
@@ -113,13 +113,32 @@ agent.registerService('arduino.findDeviceId', function(req, resp) {
 	for(var deviceId in devicesDesc) {
 		var deviceDesc = devicesDesc[deviceId]
 		if( deviceDesc.alias.toLowerCase() === req.alias.toLowerCase()) {
-			resp.data = {deviceId}
+			var {type} = deviceDesc
+			var {actions} = typesDesc[type]
+			resp.data = {deviceId, actions: Object.keys(actions)}
 			return
 		}
 	}
 	resp.statusCode = 201
 
 })
+
+
+agent.registerService('arduino.deviceList', function(req, resp) {
+	console.log('deviceList', req)
+
+	var list = []
+	for(var deviceId in devicesDesc) {
+		var {type, alias} = devicesDesc[deviceId]
+		var {actions} = typesDesc[type]
+		if (actions != undefined) {
+			list.push(alias)
+		}
+	}
+	resp.data = {devices: list}
+
+})
+
 
 
 agent.start()

@@ -93,6 +93,7 @@ rgbLed.actions.color = {
 		let color = `RGB(${red},${green},${blue})`
 		color = colorMap[color] || color
 		device.properties.color = color
+		device.properties.state = 'on'
 		device.adapter.color(args)
 	},
 	args: {

@@ -33,7 +33,7 @@
 		"devices": {
 			"led1": {
 				"type": "rgbLed",
-				"alias": "RGB Led",
+				"alias": "Led Couleur",
 				"options": {
 					"pins": {
 						"red": 5,
