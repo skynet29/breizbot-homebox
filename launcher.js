@@ -8,8 +8,6 @@ const hostName = require('os').hostname()
 
 const name = `launcher.${hostName}`
 
-require('console-title')('Agents Launcher')
-
 
 
 // var client  = new Client(options)
@@ -174,7 +172,7 @@ function stopAgent(data) {
 	}
 	else {
 		agentsState[agentName].state = "stoping"
-		agent.sendTo(`box.${agentName}`, 'shutdown')
+		agent.sendCmd(agentName, 'shutdown')
 	}
 	
 }
@@ -196,31 +194,33 @@ startConfiguredAgents()
 
 
 
-agent.register('launcherStartAgent', false, function(msg) {
+agent.register('homebox.launcher.startAgent', function(msg) {
+	if (msg.hist === true) {
+		return
+	} 
 	console.log(`startAgent '${ msg.data}'`)
 	startAgent(msg.data)
 })
 
-agent.register('launcherStopAgent', false, function(msg) {
+agent.register('homebox.launcher.stopAgent', function(msg) {
+	if (msg.hist === true) {
+		return
+	} 
 	console.log(`stopAgent`, msg.data)
 	stopAgent(msg.data)
 })
 
-agent.onConnect(function() {
-	sendStatus()
-})
-
-
+agent.onConnect(sendStatus)
 agent.start()
 
 
 function sendStatus() {
-	agent.emit(`launcherStatus.${hostName}`, agentsState)
+	agent.emitTopic(`homebox.launcher.status`, agentsState)
 }
 
 process.on('SIGINT', function() {
 	//stopAllRunningAgents()
 	//sigInt = true
-	agent.emit(`launcherStatus.${hostName}`)
+	agent.emitTopic(`homebox.launcher.status`)
 	process.exit(0)
 })

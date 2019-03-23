@@ -33,14 +33,14 @@ const types = {
 
 const agent  = require('../lib/agent')
 
-agent.register('tplink.action.*', false, function(msg) {
-	console.log('Receive msg', msg)
-	const deviceId = msg.topic.split('.')[2]
-	console.log('deviceId', deviceId)
+agent.register('homebox.tplink.cmd', function(msg) {
+	console.log('msg', msg)
+	if (msg.hist === true) {
+		return
+	}
+	const {cmd, deviceId} = msg.data
 
 	const device = devices[deviceId]
-
-	const cmd = msg.data && msg.data.action
 
 	const action = device.actions[cmd]
 
@@ -116,14 +116,11 @@ function sendStatus() {
 
 	//console.log('sendStatus', data)
 
-	agent.emit('tplink.status', data)		
+	agent.emitTopic('homebox.tplink.status', data)		
 
 }
 
 
 agent.onConnect(sendStatus)
-agent.onClose(() => {
-	agent.emit('tplink.status')
-})
 agent.start()
 

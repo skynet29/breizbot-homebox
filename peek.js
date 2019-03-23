@@ -8,7 +8,7 @@ console.log('params', params)
 
 
 if (params.topic == undefined) {
-	console.log('Usage: node peek topic=topicName [hist=true]')
+	console.log('Usage: node peek topic=topicName')
 	process.exit(0)
 }
 
@@ -19,9 +19,7 @@ process.argv[2] = agentName
 const agent = require('./lib/agent')
 
 
-var hist = (params.hist === 'true')
-
-agent.register(params.topic, hist, function(msg) {
+agent.register(params.topic, function(msg) {
 	console.log('msg', JSON.stringify(msg, null, 4))
 })
 
