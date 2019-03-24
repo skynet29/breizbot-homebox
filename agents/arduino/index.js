@@ -72,26 +72,24 @@ function sendStatus() {
 		data.push({type, properties, alias, deviceId})
 	}
 
-	agent.emit('arduino.status', data)
+	agent.emitTopic('homebox.arduino.status', data)
 
 }
 
 agent.onConnect(function() {
-	agent.emit('arduino.types', typesDesc)
+	agent.emitTopic('homebox.arduino.types', typesDesc)
 })
 
-agent.register('arduino.action.*', false, function(msg) {
+agent.register('homebox.arduino.cmd', function(msg) {
 	console.log('Receive msg', msg.data)
-	const deviceId = msg.topic.split('.')[2]
-	console.log('deviceId', deviceId)
+	const {cmd, deviceId} = msg.data
+	console.log('deviceId', deviceId, 'cmd', cmd)
 
 	const device = devices[deviceId]
 	if (device == undefined) {
 		console.log('unknown device', deviceId)
 		return
 	}
-
-	const cmd = msg.data && msg.data.action
 
 	const {actions} = typesDesc[device.type]
 	const action = actions[cmd]
@@ -103,42 +101,6 @@ agent.register('arduino.action.*', false, function(msg) {
 
 
 })
-
-agent.registerService('arduino.findDeviceId', function(req, resp) {
-	console.log('findDeviceId', req)
-	if (typeof req.alias != 'string') {
-		resp.statusCode = 200
-	}
-
-	for(var deviceId in devicesDesc) {
-		var deviceDesc = devicesDesc[deviceId]
-		if( deviceDesc.alias.toLowerCase() === req.alias.toLowerCase()) {
-			var {type} = deviceDesc
-			var {actions} = typesDesc[type]
-			resp.data = {deviceId, actions: Object.keys(actions)}
-			return
-		}
-	}
-	resp.statusCode = 201
-
-})
-
-
-agent.registerService('arduino.deviceList', function(req, resp) {
-	console.log('deviceList', req)
-
-	var list = []
-	for(var deviceId in devicesDesc) {
-		var {type, alias} = devicesDesc[deviceId]
-		var {actions} = typesDesc[type]
-		if (actions != undefined) {
-			list.push(alias)
-		}
-	}
-	resp.data = {devices: list}
-
-})
-
 
 
 agent.start()

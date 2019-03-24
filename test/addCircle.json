@@ -1,15 +1,12 @@
 {
-	"id": "circle1",
-	"shape": {
-		"type": "circle",
-		"latlng": {
-			"lat":48.4, 
-			"lng":-4.47		
-		},
+	"type": "circle",
+	"latlng": {
+		"lat":48.4, 
+		"lng":-4.47		
+	},
 
-		"radius": 200,
-		"style": {
-			"color": "red"
-		}
-	}	
+	"radius": 200,
+	"style": {
+		"color": "red"
+	}
 }
