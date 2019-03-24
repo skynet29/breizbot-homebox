@@ -3,23 +3,30 @@ const agent  = require('../lib/agent')
 
 agent.start()
 
+agent.onShutdown(() => {
+	agent.emitTopic('homebox.map.removeShape', {id: 'radar1'})
+})
+
 var angle = 0
-var topic = 'mapViewAddShape.default.radar1'
 
 function update() {
-	agent.emit(topic, {
-			"shape": "sector",
-			"latlng": {
-				"lat":48.4, 
-				"lng":-4.47		
+	agent.emitTopic('homebox.map.updateShape', {
+		id: 'radar1',
+
+		shape: {
+			type: 'sector',
+			latlng: {
+				lat:48.4, 
+				lng:-4.47		
 			},
 
-			"radius": 1000,
-			"direction": angle,
-			"size": 60,
-			"options": {
-				"color": "yellow"
+			radius: 1000,
+			direction: angle,
+			size: 60,
+			options: {
+				color: 'yellow'
 			}
+		}
 	})
 }
 
@@ -29,6 +36,3 @@ setInterval(function() {
 }, 100)
 
 
-agent.onClose(function() {
-	agent.emit(topic)
-})
