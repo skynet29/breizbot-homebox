@@ -47,3 +47,29 @@ client.on('message', function(msg) {
 
 client.connect()
 masterClient.connect()
+
+let pingOk = true
+let timer = null
+
+
+client.on('connect', () => {
+	setInterval(() => {
+		if (!pingOk) {
+			console.log('pong timeout')
+			client.close()
+			return
+		}
+		pingOk = false
+		client.sendMsg({type: 'ping'})
+	}, 60000)	
+})
+
+
+client.on('disconnect', () => {
+	clearInterval(timer)
+})
+
+client.on('pong', () => {
+	//console.log('onPong')
+	pingOk = true
+})
