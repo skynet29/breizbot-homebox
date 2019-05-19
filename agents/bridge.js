@@ -51,21 +51,25 @@ masterClient.connect()
 let pingOk = true
 let timer = null
 
+function onTimeout() {
+	if (!pingOk) {
+		console.log('pong timeout')
+		client.close()
+		return
+	}
+	pingOk = false
+	client.sendMsg({type: 'ping'})	
+}
 
 client.on('connect', () => {
-	setInterval(() => {
-		if (!pingOk) {
-			console.log('pong timeout')
-			client.close()
-			return
-		}
-		pingOk = false
-		client.sendMsg({type: 'ping'})
-	}, 60000)	
+	console.log('onConnect')
+	pingOk = true
+	timer = setInterval(onTimeout, 60000)	
 })
 
 
 client.on('disconnect', () => {
+	console.log('onDisconnect')
 	clearInterval(timer)
 })
 
