@@ -12,7 +12,8 @@ module.exports = {
 			radar: {script: 'agents/radar.js', start: 'manual'},
 			parrot: {script: 'agents/parrot.js', start: 'manual'},
 			tplink: {script: 'agents/tplink.js', start: 'manual'},
-			arduino: {script: 'agents/arduino/index.js', start: 'manual'}
+			arduino: {script: 'agents/arduino/index.js', start: 'manual'},
+			media: {script: 'agents/media.js', start: 'manual'}
 		}
 	},
 

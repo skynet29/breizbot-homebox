@@ -1,12 +1,12 @@
 var agent = require('../../../lib/agent')
 
-agent.registerService('sum', function(req, resp) {
+agent.registerService('sum', function(req) {
 	console.log('req', req)
-	if (typeof req.a != 'number' || typeof req.b != 'number') {
-		resp.statusCode = 200
+	if (req == undefined || typeof req.a != 'number' || typeof req.b != 'number') {
+		return Promise.reject('Bad arguments')
 	}
 	else {
-		resp.data = req.a + req.b
+		return req.a + req.b
 	}
 })
 
