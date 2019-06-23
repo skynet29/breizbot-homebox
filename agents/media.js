@@ -12,10 +12,9 @@ agent.registerService('homebox.media.drive', function(req) {
 	console.log('req', req)
 
 	return drivelist.list().then((drives) => {
-		//console.log('drives', drives)
 		return drives
 			.filter((d) => d.isUSB)
-			.map((d) => d.mountpoints[0].label)
+			.map((d) => d.mountpoints[0].path.split('/').pop())
 
 	})	
 })
@@ -27,7 +26,7 @@ agent.registerService('homebox.media.list', function(req) {
 	return drivelist.list()
 	.then((drives) => {
 		//console.log('drives', drives)
-		return drives.find((d) => d.isUSB && d.mountpoints[0].label == driveName)
+		return drives.find((d) => d.isUSB && d.mountpoints[0].path.split('/').pop() == driveName)
 
 	})
 	.then((drive) => {
@@ -77,7 +76,7 @@ agent.registerService('homebox.media.load', function(req) {
 	return drivelist.list()
 	.then((drives) => {
 		console.log('drives', drives)
-		return drives.find((d) => d.isUSB && d.mountpoints[0].label == driveName)
+		return drives.find((d) => d.isUSB && d.mountpoints[0].path.split('/').pop() == driveName)
 
 	})
 	.then((drive) => {

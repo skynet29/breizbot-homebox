@@ -10,9 +10,16 @@ if (userName == undefined) {
 	console.log('env BREIZBOT_USER is not defined')
 	process.exit(1)
 }
+
 const pwd = process.env.BREIZBOT_PWD
 if (pwd == undefined) {
 	console.log('env BREIZBOT_PWD is not defined')
+	process.exit(1)
+}
+
+const breizbotUrl = process.env.BREIZBOT_URL
+if (pwd == undefined) {
+	console.log('env BREIZBOT_URL is not defined')
 	process.exit(1)
 }
 
@@ -26,11 +33,9 @@ const {masterHost, masterPort} = globalConfig
 const masterUrl = `ws://${masterHost}:${masterPort}/${agentName}`
 const masterClient = new Client(masterUrl)
 
-
-const host = 'com.breizbot.ovh'
 const port = 8090
 
-const url = `wss://${userName}:${pwd}@${host}:${port}/homebox/bridge`
+const url = `wss://${userName}:${pwd}@${breizbotUrl}:${port}/homebox/bridge`
 
 const client = new Client(url)
 
