@@ -33,9 +33,10 @@ const {masterHost, masterPort} = globalConfig
 const masterUrl = `ws://${masterHost}:${masterPort}/${agentName}`
 const masterClient = new Client(masterUrl)
 
-const port = 8090
+//const port = 80
 
-const url = `wss://${userName}:${pwd}@${breizbotUrl}:${port}/homebox/bridge`
+const url = `wss://${userName}:${pwd}@${breizbotUrl}/homebox/bridge`
+console.log('url', url)
 
 const client = new Client(url)
 
@@ -69,7 +70,7 @@ function onTimeout() {
 client.on('connect', () => {
 	console.log('onConnect')
 	pingOk = true
-	timer = setInterval(onTimeout, 60000)	
+	timer = setInterval(onTimeout, 10000)	
 })
 
 
